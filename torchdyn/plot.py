@@ -20,7 +20,7 @@ import torch.nn as nn
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def plot_2d_boundary(model, X, y, mesh, num_classes=2, figsize=(8,4), alpha=0.8):
+def plot_2d_boundary(model, X, y, mesh, num_classes=2, figsize=(8,4), filename='boundary',alpha=0.8):
     """Plots decision boundary of a 2-dimensional task
 
      :param model: model
@@ -45,9 +45,10 @@ def plot_2d_boundary(model, X, y, mesh, num_classes=2, figsize=(8,4), alpha=0.8)
                  preds, cmap='winter', alpha=alpha, levels=10)
     for i in range(num_classes):
         plt.scatter(X[y==i,0], X[y==i,1], alpha=alpha)
+    plt.savefig(filename+'.png')
 
 
-def plot_2d_flows(trajectory, num_flows=2, figsize=(8,4), alpha=0.8):
+def plot_2d_flows(trajectory, num_flows=2, figsize=(8,4), filename='flows',alpha=0.8):
     """Plots data flows learned by a neural differential equation.
 
      :param trajectory: tensor of data flows. Assumed to be of dimensions `L, B, *` with `L`:length of trajectory, `B`:batch size, `*`:remaining dimensions.
@@ -68,6 +69,7 @@ def plot_2d_flows(trajectory, num_flows=2, figsize=(8,4), alpha=0.8):
     plt.title('Dimension: 1')
     for i in range(num_flows):
         plt.plot(trajectory[:,i,1], color='blue', alpha=alpha)
+    plt.savefig(filename+'.png')
 
 
 defaults_1D = {'n_grid':100, 'n_levels':30, 'x_span':[-1,1],
@@ -76,7 +78,7 @@ defaults_1D = {'n_grid':100, 'n_levels':30, 'x_span':[-1,1],
             'device':'cuda:0'}
 
 def plot_traj_vf_1D(model, s_span, traj, device, x_span, n_grid,
-                    n_levels=30, contour_alpha=0.7, cmap='winter', traj_color='orange', traj_alpha=0.1):
+                    n_levels=30, contour_alpha=0.7, cmap='winter', traj_color='orange', traj_alpha=0.1,filename='1D_data'):
     """Plots 1D data flows.
 
      :param model: model
@@ -119,6 +121,7 @@ def plot_traj_vf_1D(model, s_span, traj, device, x_span, n_grid,
         ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
         ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
         ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+        plt.savefig(filename+'.png')
 
 
     else:
@@ -141,10 +144,11 @@ def plot_traj_vf_1D(model, s_span, traj, device, x_span, n_grid,
 
         plt.xlabel(r"$s$ [Depth]")
         plt.ylabel(r"$h(s)$")
+        plt.savefig(filename+'.png')
 
         return (S, X, U, V)
 
-def plot_2D_depth_trajectory(s_span, trajectory, yn, n_lines):
+def plot_2D_depth_trajectory(s_span, trajectory, yn, n_lines,filename='2d_depth'):
     color=['orange', 'blue']
 
     fig = plt.figure(figsize=(8,2))
@@ -160,9 +164,10 @@ def plot_2D_depth_trajectory(s_span, trajectory, yn, n_lines):
     ax1.set_xlabel(r"$s$ [Depth]")
     ax1.set_ylabel(r"$h_1(s)$")
     ax1.set_title("Dimension 1")
+    plt.savefig(filename+'.png')
 
 
-def plot_2D_state_space(trajectory, yn, n_lines):
+def plot_2D_state_space(trajectory, yn, n_lines,filename='2d_state_space'):
     color=['orange', 'blue']
 
     fig = plt.figure(figsize=(3,3))
@@ -173,8 +178,9 @@ def plot_2D_state_space(trajectory, yn, n_lines):
     ax.set_xlabel(r"$h_0$")
     ax.set_ylabel(r"$h_1$")
     ax.set_title("Flows in the state-space")
+    plt.savefig(filename+'.png')
 
-def plot_2D_space_depth(s_span, trajectory, yn, n_lines):
+def plot_2D_space_depth(s_span, trajectory, yn, n_lines,filename='2d_space_depth'):
     colors = ['orange', 'blue']
     fig = plt.figure(figsize=(6,3))
     ax = Axes3D(fig)
@@ -189,8 +195,9 @@ def plot_2D_space_depth(s_span, trajectory, yn, n_lines):
     ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
     ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
     ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+    plt.savefig(filename+'.png')
 
-def plot_static_vector_field(model, trajectory, t=0., N=50, device='cuda'):
+def plot_static_vector_field(model, trajectory, t=0., N=50, device='cuda',filename='plot_vec_field'):
     x = torch.linspace(trajectory[:,:,0].min(), trajectory[:,:,0].max(), N)
     y = torch.linspace(trajectory[:,:,1].min(), trajectory[:,:,1].max(), N)
     X, Y = torch.meshgrid(x,y)
@@ -212,8 +219,9 @@ def plot_static_vector_field(model, trajectory, t=0., N=50, device='cuda'):
     ax.set_xlabel(r"$h_0$")
     ax.set_ylabel(r"$h_1$")
     ax.set_title("Learned Vector Field")
+    plt.savefig(filename+'.png')
 
-def plot_3D_dataset(X, yn):
+def plot_3D_dataset(X, yn,filename='3d_dataset'):
     colors = ['orange', 'blue']
     fig = plt.figure(figsize=(4,4))
     ax = Axes3D(fig)
@@ -226,3 +234,4 @@ def plot_3D_dataset(X, yn):
     ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
     ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
     ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+    plt.savefig(filename+'.png')
