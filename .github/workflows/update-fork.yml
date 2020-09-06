@@ -2,7 +2,7 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # every 10 minutes
+    - cron: '*/2 * * * *' # every 2 minutes
   workflow_dispatch: # on button click
 
 jobs:
@@ -14,6 +14,6 @@ jobs:
       - uses: TG908/fork-sync@v1.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          owner: DiffEqML
+          owner: ucalyptus
           base: master
           head: master
